@@ -1,3 +1,4 @@
+# ============ ARGOCD CM ============
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,16 +6,47 @@ metadata:
   namespace: argocd
 data:
   url: https://54.212.104.181:32588
-# Auto reload config every 10 seconds
   timeout.reconciliation: 10s
   dex.config: |
     connectors:
-    - type: github
-      id: github
-      name: GitHub
-      config:
-        clientID: Ov23limd3PFv9mcPHlaY
-        clientSecret: c860c65d15da56644f4238c7c5b2743fab23b5ab
-        # Remove orgs block completely ← 
-        loadAllGroups: false
-        useLoginAsID: true
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: Ov23limd3PFv9mcPHlaY
+          clientSecret: c860c65d15da56644f4238c7c5b2743fab23b5ab
+          loadAllGroups: false
+          useLoginAsID: true
+
+---
+# ============ ARGOCD CMD PARAMS CM ============
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+data:
+  server.dex.server.disable.tls: "true"
+  reposerver.parallelism.limit: "10"
+
+
+---
+# ============ ARGOCD RBAC CM ============
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    # Admin role - full access
+    p, role:admin, applications, *, */*, allow
+    p, role:admin, clusters, *, *, allow
+    p, role:admin, repositories, *, *, allow
+    p, role:admin, projects, *, *, allow
+    p, role:admin, accounts, *, *, allow
+    p, role:admin, gpgkeys, *, *, allow
+    # Bind your GitHub username directly
+    g, priyanshu3103, role:admin
+  scopes: '[groups, email]'
