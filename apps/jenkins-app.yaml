@@ -1,20 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-rbac
+  name: jenkins
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: jenkins-project
   source:
-    repoURL: https://github.com/priyanshu3103/dev-argocd.git
-    targetRevision: master
-    path: apps/rbac
+    repoURL: https://github.com/priyanshu3103/argocd-manifests
+    targetRevision: HEAD
+    path: apps/jenkins        # ← ArgoCD reads all yaml files in folder
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: jenkins
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
