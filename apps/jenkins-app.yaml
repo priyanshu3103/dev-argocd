@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: jenkins-project
+  project: jenkins-rules
   source:
     repoURL: https://github.com/priyanshu3103/argocd-manifests
     targetRevision: HEAD
