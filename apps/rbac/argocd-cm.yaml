@@ -4,7 +4,7 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
-  url: https://35.81.148.199:31693
+  url: https://54.212.104.181:31693
 # Auto reload config every 10 seconds
   timeout.reconciliation: 10s
   dex.config: |
@@ -18,4 +18,3 @@ data:
         # Remove orgs block completely ← 
         loadAllGroups: false
         useLoginAsID: true
-        
