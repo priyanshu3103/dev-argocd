@@ -17,6 +17,7 @@ data:
           clientSecret: c860c65d15da56644f4238c7c5b2743fab23b5ab
           loadAllGroups: false
           useLoginAsID: true
+          redirectURI: https://54.212.104.181:32588/api/dex/callback
 
 ---
 # ============ ARGOCD CMD PARAMS CM ============
