@@ -9,7 +9,7 @@ spec:
   project: jenkins-rules
   source:
     repoURL: https://github.com/priyanshu3103/argocd-manifests
-    targetRevision: HEAD
+    targetRevision: master
     path: apps/jenkins        # ← ArgoCD reads all yaml files in folder
   destination:
     server: https://kubernetes.default.svc
