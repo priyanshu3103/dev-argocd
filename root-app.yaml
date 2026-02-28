@@ -20,3 +20,9 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  # Resource filters - what root app can manage
+  ignoreDifferences:
+    - group: argoproj.io
+      kind: Application
+      jsonPointers:
+        - /status
