@@ -7,3 +7,4 @@ data:
   # Auto reload dex config without restart
   server.dex.server.disable.tls: "true"
   reposerver.parallelism.limit: "10"
+  

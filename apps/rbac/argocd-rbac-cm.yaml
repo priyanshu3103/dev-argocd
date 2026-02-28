@@ -17,3 +17,4 @@ data:
     # Bind your GitHub username directly
     g, priyanshu3103, role:admin
   scopes: '[groups, email]'
+  
