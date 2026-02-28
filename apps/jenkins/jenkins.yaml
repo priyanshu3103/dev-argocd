@@ -1,11 +1,11 @@
-# ============ NAMESPACE ============
+# ---------- NAMESPACE ----------
 apiVersion: v1
 kind: Namespace
 metadata:
   name: jenkins
 
 ---
-# ============ SERVICE ACCOUNT ============
+# ---------- SERVICE ACCOUNT ----------
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -13,87 +13,39 @@ metadata:
   namespace: jenkins
 
 ---
-
-# ============ CLUSTER ROLE ============
+# ---------- CLUSTER ROLE ----------
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: jenkins-role
 rules:
-  - apiGroups: [""]
-    resources:
-      - pods
-      - pods/exec
-      - pods/log
-      - pods/portforward
-      - persistentvolumeclaims
-      - events
-      - secrets
-      - configmaps
-      - serviceaccounts
-      - services
-    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
-  - apiGroups: ["apps"]
-    resources:
-      - deployments
-      - statefulsets
-      - replicasets
-      - daemonsets
-    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
-  - apiGroups: ["batch"]
-    resources:
-      - jobs
-      - cronjobs
-    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["pods", "pods/exec", "pods/log", "services", "secrets", "configmaps", "persistentvolumeclaims"]
+  verbs: ["*"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets"]
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["*"]
 
 ---
-# ============ CLUSTER ROLE BINDING ============
+# ---------- ROLE BINDING ----------
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: jenkins-role-binding
+  name: jenkins-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: jenkins-role
 subjects:
-  - kind: ServiceAccount
-    name: jenkins
-    namespace: jenkins
-
----
-# ============ AGENT ROLE ============
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: jenkins-agent-role
+- kind: ServiceAccount
+  name: jenkins
   namespace: jenkins
-rules:
-  - apiGroups: [""]
-    resources: ["pods", "pods/exec", "pods/log"]
-    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
-  - apiGroups: [""]
-    resources: ["secrets", "configmaps"]
-    verbs: ["get", "list"]
 
 ---
-# ============ AGENT ROLE BINDING ============
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: jenkins-agent-role-binding
-  namespace: jenkins
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: jenkins-agent-role
-subjects:
-  - kind: ServiceAccount
-    name: jenkins
-    namespace: jenkins
-
----
-# ============ PVC ============
+# ---------- PVC ----------
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -108,14 +60,12 @@ spec:
       storage: 10Gi
 
 ---
-# ============ DEPLOYMENT ============
+# ---------- DEPLOYMENT ----------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jenkins
   namespace: jenkins
-  labels:
-    app: jenkins
 spec:
   replicas: 1
   selector:
@@ -129,82 +79,52 @@ spec:
       serviceAccountName: jenkins
       securityContext:
         fsGroup: 1000
-        runAsUser: 1000
-      initContainers:
-        - name: fix-permissions
-          image: busybox
-          command: ["sh", "-c", "chown -R 1000:1000 /var/jenkins_home"]
-          volumeMounts:
-            - name: jenkins-data
-              mountPath: /var/jenkins_home
-          securityContext:
-            runAsUser: 0
       containers:
-        - name: jenkins
-          image: jenkins/jenkins:lts
-          ports:
-            - name: http
-              containerPort: 8080
-            - name: jnlp
-              containerPort: 50000
-          env:
-            - name: JAVA_OPTS
-              value: >-
-                -Xmx512m
-                -Xms256m
-                -Djenkins.install.runSetupWizard=true
-            - name: JENKINS_OPTS
-              value: "--httpPort=8080"
-            - name: CASC_JENKINS_CONFIG
-              value: /var/jenkins_home/casc_configs
-          resources:
-            requests:
-              cpu: 500m
-              memory: 512Mi
-            limits:
-              cpu: 1500m
-              memory: 2Gi
-          volumeMounts:
-            - name: jenkins-data
-              mountPath: /var/jenkins_home
-          readinessProbe:
-            httpGet:
-              path: /login
-              port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            failureThreshold: 10
-          livenessProbe:
-            httpGet:
-              path: /login
-              port: 8080
-            initialDelaySeconds: 90
-            periodSeconds: 10
-            failureThreshold: 5
-      volumes:
+      - name: dev-jenkins
+        image: jenkins/jenkins:lts
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1500m
+            memory: 2Gi
+        volumeMounts:
         - name: jenkins-data
-          persistentVolumeClaim:
-            claimName: jenkins-pvc
+          mountPath: /var/jenkins_home
+        readinessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 60
+        livenessProbe:
+          httpGet:
+            path: /login
+            port: 8080
+          initialDelaySeconds: 90
+      volumes:
+      - name: jenkins-data
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
 
 ---
-# ============ SERVICE ============
+# ---------- SERVICE ----------
 apiVersion: v1
 kind: Service
 metadata:
   name: jenkins
   namespace: jenkins
-  labels:
-    app: jenkins
 spec:
   type: NodePort
   selector:
     app: jenkins
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-      nodePort: 32000
-    - name: jnlp
-      port: 50000
-      targetPort: 50000
-      nodePort: 32001
+  - port: 8080
+    targetPort: 8080
+    nodePort: 32000
+  - port: 50000
+    targetPort: 50000
+    nodePort: 32001
