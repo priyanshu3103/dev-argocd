@@ -14,13 +14,5 @@ data:
     p, role:admin, projects, *, *, allow
     p, role:admin, accounts, *, *, allow
     p, role:admin, gpgkeys, *, *, allow
-
-    # Jenkins dev role - jenkins namespace only
-    p, role:jenkins-dev, applications, get, jenkins-project/*, allow
-    p, role:jenkins-dev, applications, sync, jenkins-project/*, allow
-    p, role:jenkins-dev, applications, action/*, jenkins-project/*, allow
-
-    # Readonly role - view only
-    p, role:readonly, applications, get, */*, allow
-
-  scopes: '[groups, email]'
+    # Bind your GitHub username directly
+    g, priyanshu3103, role:admin
