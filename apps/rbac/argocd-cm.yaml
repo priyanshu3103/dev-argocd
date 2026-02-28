@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  url: https://35.81.148.199:31693
+
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: Ov23limd3PFv9mcPHlaY
+          clientSecret: c860c65d15da56644f4238c7c5b2743fab23b5ab
+          orgs:
+            - name: priyanshu3103
+          teamNameField: slug
+          loadAllGroups: false
+          useLoginAsID: false
