@@ -8,8 +8,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/<your-org>/argocd-manifests  # ← your repo
-    targetRevision: HEAD
+    repoURL: https://github.com/priyanshu3103/dev-argocd
+    targetRevision: master
     path: apps
   destination:
     server: https://kubernetes.default.svc
