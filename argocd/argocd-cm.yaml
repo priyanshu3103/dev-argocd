@@ -16,3 +16,4 @@ data:
           clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
           loadAllGroups: false
           useLoginAsID: true
+          redirectURI: https://localhost:30443/api/dex/callback
