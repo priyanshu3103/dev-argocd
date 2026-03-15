@@ -5,6 +5,13 @@ metadata:
   name: jenkins-casc
   namespace: jenkins
 data:
+  plugins.txt: |
+    oic-auth:latest
+    role-strategy:latest
+    configuration-as-code:latest
+    git:latest
+    workflow-aggregator:latest
+    kubernetes:latest
   jenkins.yaml: |
     jenkins:
       securityRealm:
@@ -100,15 +107,28 @@ spec:
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
+        - name: install-plugins
+          image: jenkins/jenkins:lts
+          command:
+            - sh
+            - -c
+            - jenkins-plugin-cli --plugin-file /var/jenkins_casc/plugins.txt
+          volumeMounts:
+            - name: jenkins-data
+              mountPath: /var/jenkins_home
+            - name: jenkins-casc
+              mountPath: /var/jenkins_casc
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts    # ← pulls from DockerHub
+          image: jenkins/jenkins:lts
           ports:
             - containerPort: 8080
             - containerPort: 50000
           env:
             - name: JAVA_OPTS
-              value: "-Xmx512m -Xms256m"
+              value: "-Xmx512m -Xms256m -Djenkins.install.runSetupWizard=false"
+            - name: CASC_JENKINS_CONFIG
+              value: /var/jenkins_casc/jenkins.yaml
           resources:
             requests:
               cpu: 500m
@@ -119,6 +139,8 @@ spec:
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
+            - name: jenkins-casc
+              mountPath: /var/jenkins_casc
           readinessProbe:
             httpGet:
               path: /login
@@ -130,6 +152,9 @@ spec:
         - name: jenkins-data
           persistentVolumeClaim:
             claimName: jenkins-pvc
+        - name: jenkins-casc
+          configMap:
+            name: jenkins-casc
 
 ---
 # ============ SERVICE ============
