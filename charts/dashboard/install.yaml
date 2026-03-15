@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubernetes-dashboard-install
+  namespace: kubernetes-dashboard
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
