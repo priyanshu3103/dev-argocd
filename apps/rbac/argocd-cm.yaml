@@ -5,7 +5,7 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
-  url: http://localhost:9090
+  url: http://localhost:30090
   timeout.reconciliation: 10s
   dex.config: |
     connectors:
@@ -14,10 +14,10 @@ data:
         name: GitHub
         config:
           clientID: Ov23limd3PFv9mcPHlaY
-          clientSecret: c860c65d15da56644f4238c7c5b2743fab23b5ab
+          clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
           loadAllGroups: false
           useLoginAsID: true
-          redirectURI: http://localhost:9090/api/dex/callback
+          redirectURI: http://localhost:30090/api/dex/callback
 
 ---
 # ============ ARGOCD CMD PARAMS CM ============
