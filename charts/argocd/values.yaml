@@ -1,0 +1,55 @@
+argo-cd:
+  global:
+    domain: localhost
+
+  server:
+    service:
+      type: NodePort
+      nodePortHttp: 30090
+      nodePortHttps: 30443
+
+    extraArgs:
+      - --insecure   # disable TLS on server side for local
+
+    config:
+      url: https://localhost:30443
+      timeout.reconciliation: 10s
+      dex.config: |
+        connectors:
+          - type: github
+            id: github
+            name: GitHub
+            config:
+              clientID: Ov23limd3PFv9mcPHlaY
+              clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
+              loadAllGroups: false
+              useLoginAsID: true
+              redirectURI: https://localhost:30443/api/dex/callback
+
+    rbacConfig:
+      policy.default: role:readonly
+      policy.csv: |
+        p, role:admin, applications, *, */*, allow
+        p, role:admin, clusters, *, *, allow
+        p, role:admin, repositories, *, *, allow
+        p, role:admin, projects, *, *, allow
+        p, role:admin, accounts, *, *, allow
+        p, role:admin, gpgkeys, *, *, allow
+        g, priyanshu3103, role:admin
+      scopes: '[groups, email]'
+
+  dex:
+    enabled: true
+
+  redis:
+    enabled: true
+
+  repoServer:
+    autoscaling:
+      enabled: false
+
+  applicationSet:
+    enabled: true
+
+  notifications:
+    enabled: false  # disable for local
