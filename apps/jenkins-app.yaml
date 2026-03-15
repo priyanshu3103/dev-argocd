@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: jenkins-project
+  project: default
   source:
     repoURL: https://github.com/priyanshu3103/dev-argocd.git
     targetRevision: HEAD
