@@ -45,7 +45,7 @@ kubectl patch svc argocd-server -n argocd \
   -p '{"spec": {"type": "NodePort", "ports": [{"port": 80, "nodePort": 30090, "targetPort": 8080, "name": "http"}, {"port": 443, "nodePort": 30443, "targetPort": 8080, "name": "https"}]}}'
 
 echo "=== Applying Root App ==="
-kubectl apply -f bootstrap/root-app.yaml
+kubectl apply -f root-app/root-app.yaml
 
 echo "=== ArgoCD Password ==="
 kubectl get secret argocd-initial-admin-secret \
