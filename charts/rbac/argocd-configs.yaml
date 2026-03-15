@@ -5,6 +5,7 @@ metadata:
   name: argocd-cmd-params-cm
   namespace: argocd
 data:
+  server.insecure: "true"
   server.dex.server.disable.tls: "true"
   reposerver.parallelism.limit: "10"
 
