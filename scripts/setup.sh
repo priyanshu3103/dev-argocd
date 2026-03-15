@@ -48,7 +48,7 @@ kubectl wait --for=condition=ready pod \
 echo "=== Installing ArgoCD via Helm ==="
 helm upgrade --install argocd argo/argo-cd \
   --namespace argocd \
-  --values charts/argocd/values.yaml \
+  --values ../charts/argocd/values.yaml \
   --wait
 
 echo "=== Waiting for ArgoCD ==="
