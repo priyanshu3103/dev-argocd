@@ -106,36 +106,44 @@ kubectl get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
 echo ""
 
-echo "=== Dashboard Token ==="
-until kubectl get secret admin-user-token -n kubernetes-dashboard &>/dev/null; do
-  echo "Waiting for dashboard token..."
-  sleep 5
-done
-
+# Get kubectl config for Dashboard access
+# Get token
 TOKEN=$(kubectl get secret admin-user-token \
   -n kubernetes-dashboard \
   -o jsonpath='{.data.token}' | base64 -d)
 
-echo "Dashboard Token:"
-echo $TOKEN
-echo ""
-echo "Token saved to ~/dashboard-token.txt"
-echo $TOKEN > ~/dashboard-token.txt
+# Get cluster CA
+CA=$(kubectl get secret admin-user-token \
+  -n kubernetes-dashboard \
+  -o jsonpath='{.data.ca\.crt}')
 
-# Generate kubeconfig
-kubectl config set-credentials admin-user --token=$TOKEN
-kubectl config view --minify --flatten > ~/dashboard-kubeconfig.yaml
-echo "Kubeconfig saved to ~/dashboard-kubeconfig.yaml"
-```
+# Get cluster server
+SERVER=$(kubectl config view --minify \
+  -o jsonpath='{.clusters[0].cluster.server}')
 
----
+# Generate proper kubeconfig
+cat > ~/dashboard-kubeconfig.yaml << EOF
+apiVersion: v1
+kind: Config
+clusters:
+  - cluster:
+      certificate-authority-data: ${CA}
+      server: ${SERVER}
+    name: k3d-dev-cluster
+contexts:
+  - context:
+      cluster: k3d-dev-cluster
+      user: admin-user
+    name: admin-user@k3d-dev-cluster
+current-context: admin-user@k3d-dev-cluster
+users:
+  - name: admin-user
+    user:
+      token: ${TOKEN}
+EOF
 
-**Access dashboard:**
-```
-http://dashboard.localhost
-→ Select "Kubeconfig" → upload ~/dashboard-kubeconfig.yaml
-OR
-→ Select "Token" → paste from ~/dashboard-token.txt
+echo "✅ Kubeconfig saved to ~/dashboard-kubeconfig.yaml"
+cat ~/dashboard-kubeconfig.yaml
 
 echo ""
 echo "=== Setup Complete ==="
