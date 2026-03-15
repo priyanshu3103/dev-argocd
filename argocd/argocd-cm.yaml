@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  url: https://localhost:30443
+  timeout.reconciliation: 10s
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: Ov23limd3PFv9mcPHlaY
+          clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
+          loadAllGroups: false
+          useLoginAsID: true
+          redirectURI: https://localhost:30443/api/dex/callback
