@@ -8,20 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://kubernetes.github.io/dashboard/
-    chart: kubernetes-dashboard
-    targetRevision: "7.10.0"
-    helm:
-      values: |
-        kong:
-          enabled: false
-        cert-manager:
-          enabled: false
-        nginx:
-          enabled: false
-        app:
-          ingress:
-            enabled: false
+    repoURL: https://github.com/priyanshu3103/dev-argocd.git
+    targetRevision: HEAD
+    path: charts/dashboard
   destination:
     server: https://kubernetes.default.svc
     namespace: kubernetes-dashboard

@@ -19,3 +19,27 @@ subjects:
   - kind: ServiceAccount
     name: admin-user
     namespace: kubernetes-dashboard
+
+---
+# ============ INSTALL JOB ============
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: install-dashboard
+  namespace: kubernetes-dashboard
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      serviceAccountName: admin-user
+      containers:
+        - name: kubectl
+          image: bitnami/kubectl:latest
+          command:
+            - kubectl
+            - apply
+            - -f
+            - https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+      restartPolicy: Never
