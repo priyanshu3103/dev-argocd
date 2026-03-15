@@ -40,19 +40,33 @@ kubectl wait --for=condition=ready pod \
   -n argocd \
   --timeout=300s
 
-echo "=== Patching ArgoCD Service ==="
+echo "=== Patching All Services ==="
+
+# ArgoCD
 kubectl patch svc argocd-server -n argocd \
-  -p '{"spec": {"type": "NodePort", "ports": [{"port": 80, "nodePort": 30090, "targetPort": 8080, "name": "http"}, {"port": 443, "nodePort": 30443, "targetPort": 8080, "name": "https"}]}}'
+  -p '{"spec": {"type": "NodePort", "ports": [{"port": 80, "nodePort": 30090, "targetPort": 8080, "name": "http"}, {"port": 443, "nodeOnly": 30443, "targetPort": 8080, "name": "https"}]}}'
+echo "✅ ArgoCD    → https://localhost:30443"
 
-echo "=== Applying Root App ==="
-kubectl apply -f root-app/root-app.yaml
+# Wait for Jenkins then patch
+until kubectl get svc jenkins -n jenkins &>/dev/null; do
+  echo "Waiting for Jenkins service..."
+  sleep 10
+done
+kubectl patch svc jenkins -n jenkins \
+  -p '{"spec": {"type": "NodePort", "ports": [{"port": 8080, "nodePort": 30080, "targetPort": 8080, "name": "http"}]}}'
+echo "✅ Jenkins   → http://localhost:30080"
 
-echo "=== ArgoCD Password ==="
-kubectl get secret argocd-initial-admin-secret \
-  -n argocd \
-  -o jsonpath="{.data.password}" | base64 -d
+# Wait for Dashboard then patch
+until kubectl get svc kubernetes-dashboard -n kubernetes-dashboard &>/dev/null; do
+  echo "Waiting for Dashboard service..."
+  sleep 10
+done
+kubectl patch svc kubernetes-dashboard -n kubernetes-dashboard \
+  -p '{"spec": {"type": "NodePort", "ports": [{"port": 443, "nodePort": 30444, "targetPort": 8443, "name": "https"}]}}'
+echo "✅ Dashboard → https://localhost:30444"
 
 echo ""
-echo "=== Setup Complete ==="
-echo "ArgoCD: https://localhost:30443"
-echo "Jenkins: http://localhost:30080"
+echo "=== All Services Ready ==="
+echo "ArgoCD    → https://localhost:30443"
+echo "Jenkins   → http://localhost:30080"
+echo "Dashboard → https://localhost:30444"
