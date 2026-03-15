@@ -106,6 +106,37 @@ kubectl get secret argocd-initial-admin-secret \
   -o jsonpath="{.data.password}" | base64 -d
 echo ""
 
+echo "=== Dashboard Token ==="
+until kubectl get secret admin-user-token -n kubernetes-dashboard &>/dev/null; do
+  echo "Waiting for dashboard token..."
+  sleep 5
+done
+
+TOKEN=$(kubectl get secret admin-user-token \
+  -n kubernetes-dashboard \
+  -o jsonpath='{.data.token}' | base64 -d)
+
+echo "Dashboard Token:"
+echo $TOKEN
+echo ""
+echo "Token saved to ~/dashboard-token.txt"
+echo $TOKEN > ~/dashboard-token.txt
+
+# Generate kubeconfig
+kubectl config set-credentials admin-user --token=$TOKEN
+kubectl config view --minify --flatten > ~/dashboard-kubeconfig.yaml
+echo "Kubeconfig saved to ~/dashboard-kubeconfig.yaml"
+```
+
+---
+
+**Access dashboard:**
+```
+http://dashboard.localhost
+→ Select "Kubeconfig" → upload ~/dashboard-kubeconfig.yaml
+OR
+→ Select "Token" → paste from ~/dashboard-token.txt
+
 echo ""
 echo "=== Setup Complete ==="
 echo "✅ ArgoCD    → https://argocd.localhost"
