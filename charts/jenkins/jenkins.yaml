@@ -69,7 +69,7 @@ spec:
               mountPath: /var/jenkins_home
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts
+          image: jenkins/jenkins:lts    # ← pulls from DockerHub
           ports:
             - containerPort: 8080
             - containerPort: 50000
@@ -106,15 +106,13 @@ metadata:
   name: jenkins
   namespace: jenkins
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: jenkins
   ports:
     - name: http
       port: 8080
       targetPort: 8080
-      nodePort: 30080
     - name: jnlp
       port: 50000
       targetPort: 50000
-      nodePort: 30081
