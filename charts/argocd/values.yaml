@@ -25,6 +25,12 @@ argo-cd:
               loadAllGroups: false
               useLoginAsID: true
               redirectURI: https://localhost:30443/api/dex/callback
+        staticClients:
+          - id: jenkins
+            name: Jenkins
+            secret: jenkins-dex-secret
+            redirectURIs:
+              - http://jenkins.localhost/securityRealm/finishLogin
 
     rbacConfig:
       policy.default: role:readonly

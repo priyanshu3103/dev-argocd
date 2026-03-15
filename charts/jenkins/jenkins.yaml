@@ -1,3 +1,36 @@
+# ============ JENKINS CASC CONFIG ============
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-casc
+  namespace: jenkins
+data:
+  jenkins.yaml: |
+    jenkins:
+      securityRealm:
+        oic:
+          clientId: "jenkins"
+          clientSecret: "jenkins-dex-secret"
+          wellKnownOpenIDConfigurationUrl: "https://argocd.localhost/api/dex/.well-known/openid-configuration"
+          userNameField: "email"
+          fullNameFieldName: "name"
+          groupsFieldName: "groups"
+          scopes: "openid email profile groups"
+          disableSslVerification: true
+      authorizationStrategy:
+        roleBased:
+          roles:
+            global:
+              - name: "admin"
+                permissions:
+                  - "Overall/Administer"
+                assignments:
+                  - "priyanshu3103"
+              - name: "readonly"
+                permissions:
+                  - "Overall/Read"
+
+---
 # ============ SERVICE ACCOUNT ============
 apiVersion: v1
 kind: ServiceAccount
