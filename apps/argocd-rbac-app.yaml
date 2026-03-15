@@ -16,11 +16,11 @@ spec:
     namespace: argocd
   syncPolicy:
     automated:
-      prune: false        # ← never delete argocd default cms
+      prune: false
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true      # ← avoids conflict with argocd managed fields
+      - ServerSideApply=true
       - RespectIgnoreDifferences=true
   ignoreDifferences:
     - group: ""
