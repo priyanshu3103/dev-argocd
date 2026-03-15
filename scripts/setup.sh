@@ -87,7 +87,7 @@ kubectl rollout restart deployment argocd-server -n argocd
 
 # Apply root app - restores everything from GitHub
 echo "=== Applying Root App ==="
-kubectl apply -f root-app/root-app.yaml
+kubectl apply -f ../root-app/root-app.yaml
 
 # Add hosts entries
 echo "=== Adding /etc/hosts entries ==="
