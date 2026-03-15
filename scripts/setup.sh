@@ -62,11 +62,11 @@ until kubectl get svc kubernetes-dashboard -n kubernetes-dashboard &>/dev/null; 
   sleep 10
 done
 kubectl patch svc kubernetes-dashboard -n kubernetes-dashboard \
-  -p '{"spec": {"type": "NodePort", "ports": [{"port": 443, "nodePort": 30444, "targetPort": 8443, "name": "https"}]}}'
-echo "✅ Dashboard → https://localhost:30444"
+  -p '{"spec": {"type": "NodePort", "ports": [{"port": 443, "nodePort": 30090, "targetPort": 8443, "name": "https"}]}}'
+echo "✅ Dashboard → https://localhost:30090"
 
 echo ""
 echo "=== All Services Ready ==="
 echo "ArgoCD    → https://localhost:30443"
 echo "Jenkins   → http://localhost:30080"
-echo "Dashboard → https://localhost:30444"
+echo "Dashboard → https://localhost:30090"
