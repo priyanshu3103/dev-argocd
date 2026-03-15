@@ -50,12 +50,14 @@ metadata:
   namespace: kubernetes-dashboard
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
         - dashboard.localhost
+      secretName: dashboard-tls
   rules:
     - host: dashboard.localhost
       http:
