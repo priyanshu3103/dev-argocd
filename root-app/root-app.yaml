@@ -10,6 +10,7 @@ spec:
         revision: master
         directories:
           - path: apps/*
+          - path: argocd
 
   template:
     metadata:
