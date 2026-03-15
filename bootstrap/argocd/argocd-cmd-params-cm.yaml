@@ -4,5 +4,5 @@ metadata:
   name: argocd-cmd-params-cm
   namespace: argocd
 data:
-  server.dex.server.disable.tls: "true"
+  dexserver.disable.tls: "true"
   reposerver.parallelism.limit: "10"

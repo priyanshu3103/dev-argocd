@@ -4,8 +4,9 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
+
   url: https://localhost:30443
-  timeout.reconciliation: 10s
+
   dex.config: |
     connectors:
       - type: github
@@ -13,6 +14,6 @@ data:
         name: GitHub
         config:
           clientID: Ov23limd3PFv9mcPHlaY
-          clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
-          loadAllGroups: false
+          clientSecret: 980244ad85298bfdde94cf74eb98c7bf454f2ba1
+          loadAllGroups: true
           useLoginAsID: true
