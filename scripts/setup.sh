@@ -57,7 +57,7 @@ kubectl wait --for=condition=ready pod \
   -n argocd \
   --timeout=300s
 
-# Apply argocd-cm immediately
+# Apply argocd-cm immediately after install
 echo "=== Applying ArgoCD ConfigMap ==="
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -79,6 +79,12 @@ data:
           loadAllGroups: false
           useLoginAsID: true
           redirectURI: https://argocd.localhost/api/dex/callback
+    staticClients:
+      - id: jenkins
+        name: Jenkins
+        secret: jenkins-dex-secret
+        redirectURIs:
+          - http://jenkins.localhost/securityRealm/finishLogin
 EOF
 
 # Restart dex to pick up config
