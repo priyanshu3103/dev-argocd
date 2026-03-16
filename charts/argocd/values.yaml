@@ -12,7 +12,8 @@ argo-cd:
         kind: ClusterIssuer
         name: selfsigned
 
-    extraArgs: []
+    extraArgs:
+      - --insecure    # ← ArgoCD HTTP internally
 
     config:
       url: https://argocd.localhost
