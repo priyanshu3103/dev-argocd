@@ -84,36 +84,43 @@ metadata:
   namespace: jenkins
   labels:
     app: jenkins
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: jenkins
+
   template:
     metadata:
       labels:
         app: jenkins
+
     spec:
       serviceAccountName: jenkins
       restartPolicy: Always
       schedulerName: default-scheduler
       terminationGracePeriodSeconds: 30
+
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
+
       initContainers:
+
         - name: fix-permissions
           image: busybox
           imagePullPolicy: IfNotPresent
           command: ["sh", "-c", "chown -R 1000:1000 /var/jenkins_home"]
+
           securityContext:
             runAsUser: 0
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
+
         - name: install-plugins
           image: jenkins/jenkins:lts
           imagePullPolicy: IfNotPresent
@@ -121,75 +128,64 @@ spec:
             - sh
             - -c
             - jenkins-plugin-cli --plugin-file /var/jenkins_casc/plugins.txt
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
+
             - name: jenkins-casc
               mountPath: /var/jenkins_casc
-        - name: install-mysql-client
-          image: amazonlinux:2023
-          imagePullPolicy: IfNotPresent
-          securityContext:
-          runAsUser: 0
-          privileged: true
-          command:
-          - bash
-          - -c
-          - |
-              yum update -y
-              yum install -y mariadb105
-              cp /usr/bin/mysql /var/jenkins_home/mysql
-              chmod +x /var/jenkins_home/mysql
-              echo "=== MySQL installed ==="
-              /var/jenkins_home/mysql --version
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          volumeMounts:
-          - name: jenkins-data
-            mountPath: /var/jenkins_home
+
       containers:
+
         - name: jenkins
-          image: jenkins/jenkins:lts
+          image: priyanshu3103/jenkins-mysql:lts
           imagePullPolicy: IfNotPresent
+
           ports:
             - containerPort: 8080
               protocol: TCP
             - containerPort: 50000
               protocol: TCP
+
           env:
             - name: JAVA_OPTS
               value: "-Xmx512m -Xms256m -Djenkins.install.runSetupWizard=false"
+
             - name: CASC_JENKINS_CONFIG
               value: /var/jenkins_casc/jenkins.yaml
+
           resources:
             requests:
               cpu: 500m
               memory: 512Mi
+
             limits:
               cpu: 1000m
               memory: 1Gi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home
+
             - name: jenkins-casc
               mountPath: /var/jenkins_casc
+
           readinessProbe:
             httpGet:
               path: /login
               port: 8080
+
             initialDelaySeconds: 60
             periodSeconds: 10
             failureThreshold: 10
+
       volumes:
+
         - name: jenkins-data
           persistentVolumeClaim:
             claimName: jenkins-pvc
+
         - name: jenkins-casc
           configMap:
             name: jenkins-casc
