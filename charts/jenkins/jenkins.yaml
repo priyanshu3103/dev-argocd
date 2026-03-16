@@ -118,6 +118,17 @@ spec:
               mountPath: /var/jenkins_home
             - name: jenkins-casc
               mountPath: /var/jenkins_casc
+        - name: install-mysql-client        # ← add this
+          image: amazonlinux:2
+          command:
+            - sh
+            - -c
+            - |
+              yum update -y
+              yum install -y mysql
+              cp /usr/bin/mysql /var/jenkins_home/mysql
+              cp /usr/bin/mysqldump /var/jenkins_home/mysqldump
+              echo "MySQL client installed"
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
