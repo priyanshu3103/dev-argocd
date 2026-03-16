@@ -11,9 +11,6 @@ spec:
     repoURL: https://github.com/priyanshu3103/dev-argocd.git
     targetRevision: HEAD
     path: charts/jenkins
-    helm:
-      valueFiles:
-        - jenkins.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
