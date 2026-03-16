@@ -131,6 +131,31 @@ kubectl create secret tls argocd-server-tls \
   -n argocd \
   --dry-run=client -o yaml | kubectl apply -f -
 
+echo "=== Generating TLS Certificates ==="
+# Install mkcert if not installed
+which mkcert || brew install mkcert
+mkcert -install
+
+# Generate certs
+mkcert argocd.localhost jenkins.localhost dashboard.localhost
+
+# Create TLS secrets
+kubectl create secret tls argocd-tls \
+  --cert=argocd.localhost+2.pem \
+  --key=argocd.localhost+2-key.pem \
+  -n argocd --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl create secret tls jenkins-tls \
+  --cert=argocd.localhost+2.pem \
+  --key=argocd.localhost+2-key.pem \
+  -n jenkins --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl create secret tls dashboard-tls \
+  --cert=argocd.localhost+2.pem \
+  --key=argocd.localhost+2-key.pem \
+  -n kubernetes-dashboard --dry-run=client -o yaml | kubectl apply -f -
+
+echo "✅ TLS certificates created"
 
 # Get ArgoCD password
 echo ""
