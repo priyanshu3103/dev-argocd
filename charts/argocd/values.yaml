@@ -1,17 +1,15 @@
 argo-cd:
   global:
-    domain: localhost
+    domain: argocd.localhost
 
   server:
     service:
-      type: NodePort
-      nodePortHttp: 30090
-      nodePortHttps: 30443
+      type: ClusterIP    # ← change to ClusterIP since using ingress
 
     extraArgs: []
 
     config:
-      url: https://localhost:30443
+      url: https://argocd.localhost
       timeout.reconciliation: 10s
       dex.config: |
         connectors:
@@ -23,7 +21,7 @@ argo-cd:
               clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
               loadAllGroups: false
               useLoginAsID: true
-              redirectURI: https://localhost:30443/api/dex/callback
+              redirectURI: https://argocd.localhost/api/dex/callback
         staticClients:
           - id: jenkins
             name: Jenkins
@@ -57,4 +55,4 @@ argo-cd:
     enabled: true
 
   notifications:
-    enabled: false  # disable for local
+    enabled: false
