@@ -5,6 +5,12 @@ argo-cd:
   server:
     service:
       type: ClusterIP    # ← change to ClusterIP since using ingress
+      certificate:
+      enabled: true
+      domain: argocd.localhost
+      issuer:
+        kind: ClusterIssuer
+        name: selfsigned
 
     extraArgs: []
 

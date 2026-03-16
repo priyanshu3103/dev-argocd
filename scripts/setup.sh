@@ -99,17 +99,32 @@ else
 fi
 
 # Generate self signed cert
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+#   -keyout /tmp/argocd.key \
+#   -out /tmp/argocd.crt \
+#   -subj "/CN=argocd.localhost" \
+#   -addext "subjectAltName=DNS:argocd.localhost"
+
+# # Create secret
+# kubectl create secret tls argocd-tls \
+#   --cert=/tmp/argocd.crt \
+#   --key=/tmp/argocd.key \
+#   -n argocd
+
+# Generate self signed cert for argocd
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout /tmp/argocd.key \
   -out /tmp/argocd.crt \
   -subj "/CN=argocd.localhost" \
   -addext "subjectAltName=DNS:argocd.localhost"
 
-# Create secret
-kubectl create secret tls argocd-tls \
+# Create secret in argocd namespace
+kubectl create secret tls argocd-server-tls \
   --cert=/tmp/argocd.crt \
   --key=/tmp/argocd.key \
-  -n argocd
+  -n argocd \
+  --dry-run=client -o yaml | kubectl apply -f -
+
 
 # Get ArgoCD password
 echo ""
