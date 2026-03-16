@@ -98,6 +98,19 @@ else
   echo "✅ Hosts entries already exist"
 fi
 
+# Generate self signed cert
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /tmp/argocd.key \
+  -out /tmp/argocd.crt \
+  -subj "/CN=argocd.localhost" \
+  -addext "subjectAltName=DNS:argocd.localhost"
+
+# Create secret
+kubectl create secret tls argocd-tls \
+  --cert=/tmp/argocd.crt \
+  --key=/tmp/argocd.key \
+  -n argocd
+
 # Get ArgoCD password
 echo ""
 echo "=== ArgoCD Admin Password ==="
