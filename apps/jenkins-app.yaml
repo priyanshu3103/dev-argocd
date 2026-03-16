@@ -13,7 +13,7 @@ spec:
     path: charts/jenkins
     helm:
       valueFiles:
-        - values.yaml
+        - jenkins.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
