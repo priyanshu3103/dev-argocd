@@ -8,8 +8,7 @@ argo-cd:
       nodePortHttp: 30090
       nodePortHttps: 30443
 
-    extraArgs:
-      - --insecure   # disable TLS on server side for local
+    extraArgs: []
 
     config:
       url: https://localhost:30443
