@@ -119,21 +119,25 @@ spec:
             - name: jenkins-casc
               mountPath: /var/jenkins_casc
         - name: install-mysql-client
-          image: ubuntu:22.04
+          image: amazonlinux:2023
           securityContext:
-          runAsUser: 0      # ← run as root
-          runAsNonRoot: false
-          allowPrivilegeEscalation: true
+          runAsUser: 0
+          privileged: true
           command:
-            - sh
+            - bash
             - -c
             - |
-              apt-get update -y
-              apt-get install -y mysql-client
+              yum update -y
+              yum install -y mysql
               cp /usr/bin/mysql /var/jenkins_home/mysql
               chmod +x /var/jenkins_home/mysql
-              echo "MySQL client installed at /var/jenkins_home/mysql"
+              echo "=== MySQL installed ==="
               /var/jenkins_home/mysql --version
+          volumeMounts:
+            - name: jenkins-data
+              mountPath: /var/jenkins_home
+      mountPath: /var/jenkins_home
+
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
