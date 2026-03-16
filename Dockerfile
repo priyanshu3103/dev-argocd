@@ -1,9 +1,10 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
-RUN apt-get update && \
-    apt-get install -y default-mysql-client && \
-    apt-get clean
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends mariadb-client \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 USER jenkins
