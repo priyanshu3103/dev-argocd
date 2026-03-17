@@ -1,4 +1,4 @@
-apiVersion: v2
-name: argocd-rbac
-version: 1.0.0
-description: ArgoCD RBAC configuration
+# apiVersion: v2
+# name: argocd-rbac
+# version: 1.0.0
+# description: ArgoCD RBAC configuration
