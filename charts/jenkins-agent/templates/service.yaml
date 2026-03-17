@@ -5,6 +5,7 @@ metadata:
   name: jenkins-agent-frontend
   namespace: {{ .Values.namespace }}
 spec:
+  type: ClusterIP
   selector:
     app: jenkins-agent-frontend
   ports:
