@@ -40,7 +40,7 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: jenkins-agent-nginx-config
+            name: jenkins-agent-config
             items:                          # ← add items
               - key: default.conf           # ← key in configmap
                 path: default.conf          # ← filename to mount as
