@@ -28,7 +28,7 @@ spec:
             - containerPort: {{ .Values.frontend.port }}
           envFrom:                          # ← add here
             - configMapRef:
-                name: jenkins-agent-nginx-config
+                name: jenkins-agent-config
           resources:
             requests:
               cpu: {{ .Values.frontend.resources.requests.cpu }}
@@ -39,7 +39,7 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: jenkins-agent-nginx-config
+            name: jenkins-agent-config
 {{- end }}
 
 ---
