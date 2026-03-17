@@ -24,11 +24,11 @@ spec:
             - containerPort: {{ .Values.frontend.port }}
           envFrom:
             - configMapRef:
-                name: jenkins-agent-config
+              name: jenkins-agent-config
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
-              subPath: default.conf
+              subPath: default.conf    # ← must match key in configmap
               readOnly: true
           resources:
             requests:
@@ -40,10 +40,10 @@ spec:
       volumes:
         - name: nginx-config
           configMap:
-            name: jenkins-agent-nginx-config   # ← fix: use nginx configmap not agent-config
-            items:
-              - key: default.conf
-                path: default.conf
+            name: jenkins-agent-nginx-config
+            items:                          # ← add items
+              - key: default.conf           # ← key in configmap
+                path: default.conf          # ← filename to mount as
 {{- end }}
 
 ---
