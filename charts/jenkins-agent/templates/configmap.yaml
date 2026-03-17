@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-agent-config
+  namespace: {{ .Values.namespace }}
+data:
+  FRONTEND_URL: "http://jenkins-agent-frontend:{{ .Values.frontend.port }}"
+  BACKEND_URL: "http://jenkins-agent-backend:{{ .Values.backend.port }}"

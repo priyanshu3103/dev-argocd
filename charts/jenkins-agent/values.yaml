@@ -33,3 +33,6 @@ backend:
       memory: 256Mi
 
 namespace: jenkins
+config:
+  frontendUrl: "http://jenkins-agent-frontend:80"
+  backendUrl: "http://jenkins-agent-backend:8000"
