@@ -11,6 +11,8 @@ spec:
     repoURL: https://github.com/priyanshu3103/dev-argocd.git
     targetRevision: HEAD
     path: charts/rbac
+    helm:
+    releaseName: argocd-rbac
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
