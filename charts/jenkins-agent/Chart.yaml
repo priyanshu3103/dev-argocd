@@ -1,0 +1,5 @@
+apiVersion: v2
+name: jenkins-agent
+description: Jenkins Agent Helm Chart
+version: 1.0.0
+appVersion: "1.0.0"

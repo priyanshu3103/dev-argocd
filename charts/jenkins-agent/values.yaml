@@ -1,0 +1,35 @@
+frontend:
+  enabled: true
+  image:
+    repository: priyanshu3103/jenkins-agent-frontend
+    tag: latest
+    pullPolicy: Always
+  port: 80
+  replicas: 1
+  host: frontend.localhost    # ← ingress host
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+backend:
+  enabled: true
+  image:
+    repository: priyanshu3103/jenkins-agent-backend
+    tag: latest
+    pullPolicy: Always
+  port: 8000
+  replicas: 1
+  host: backend.localhost     # ← ingress host
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+namespace: jenkins

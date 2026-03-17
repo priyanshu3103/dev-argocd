@@ -1,0 +1,28 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-agent-frontend
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: jenkins-agent-frontend
+  ports:
+    - port: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}
+{{- end }}
+
+---
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-agent-backend
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: jenkins-agent-backend
+  ports:
+    - port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.port }}
+{{- end }}
