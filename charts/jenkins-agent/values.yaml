@@ -1,12 +1,11 @@
 frontend:
   enabled: true
   image:
-    repository: priyanshu3103/jenkins-agent-frontend
-    tag: latest
+    repository: priyanshu30/jenkins-agent-frontend
+    tag: latest # frontend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 80
   replicas: 1
-  host: frontend.localhost    # ← ingress host
   resources:
     requests:
       cpu: 100m
@@ -18,12 +17,11 @@ frontend:
 backend:
   enabled: true
   image:
-    repository: priyanshu3103/jenkins-agent-backend
-    tag: latest
+    repository: priyanshu30/jenkins-agent-backend
+    tag: latest # backend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 8000
   replicas: 1
-  host: backend.localhost     # ← ingress host
   resources:
     requests:
       cpu: 100m
@@ -33,6 +31,7 @@ backend:
       memory: 256Mi
 
 namespace: jenkins
+
 config:
-  frontendUrl: "http://jenkins-agent-frontend:80"
+  frontendUrl: "http://agent.localhost"
   backendUrl: "http://jenkins-agent-backend:8000"
