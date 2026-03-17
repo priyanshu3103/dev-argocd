@@ -22,6 +22,9 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.frontend.port }}
+          envFrom:                          # ← add here
+            - configMapRef:
+                name: jenkins-agent-config
           resources:
             requests:
               cpu: {{ .Values.frontend.resources.requests.cpu }}
@@ -56,6 +59,9 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.backend.port }}
+          envFrom:                          # ← add here too
+            - configMapRef:
+                name: jenkins-agent-config
           resources:
             requests:
               cpu: {{ .Values.backend.resources.requests.cpu }}
