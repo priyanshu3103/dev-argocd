@@ -139,7 +139,7 @@ spec:
       containers:
 
         - name: jenkins
-          image: priyanshu30/jenkins-mysql:lts
+          image: priyanshu30/jenkins-mysql:lts_v1
           imagePullPolicy: IfNotPresent
 
           ports:
