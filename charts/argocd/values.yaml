@@ -1,6 +1,6 @@
 argo-cd:
   global:
-    domain: argocd.devops
+    domain: argocd.localhost
 
   server:
     service:
@@ -16,7 +16,7 @@ argo-cd:
       - --insecure    # ← ArgoCD HTTP internally
 
     config:
-      url: https://argocd.devops
+      url: https://argocd.localhost
       timeout.reconciliation: 10s
       dex.config: |
         connectors:
@@ -28,7 +28,7 @@ argo-cd:
               clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
               loadAllGroups: false
               useLoginAsID: true
-              redirectURI: https://argocd.devops/api/dex/callback
+              redirectURI: https://argocd.localhost/api/dex/callback
         staticClients:
           - id: jenkins
             name: Jenkins

@@ -11,10 +11,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - argocd.devops
+        - argocd.localhost
       secretName: argocd-tls
   rules:
-    - host: argocd.devops
+    - host: argocd.localhost
       http:
         paths:
           - path: /
