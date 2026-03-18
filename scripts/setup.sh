@@ -66,7 +66,7 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
-  url: https://argocd.localhost
+  url: https://argocd.devops
   timeout.reconciliation: 10s
   dex.config: |
     connectors:
@@ -78,7 +78,7 @@ data:
           clientSecret: 3a94802f87d9b53a6e793387d6278dfed7094e56
           loadAllGroups: false
           useLoginAsID: true
-          redirectURI: https://argocd.localhost/api/dex/callback
+          redirectURI: https://argocd.devops/api/dex/callback
     staticClients:
       - id: jenkins
         name: Jenkins
@@ -97,8 +97,8 @@ kubectl apply -f ../root-app/root-app.yaml
 
 # Add hosts entries
 echo "=== Adding /etc/hosts entries ==="
-if ! grep -q "argocd.localhost" /etc/hosts; then
-  echo "127.0.0.1 argocd.localhost jenkins.localhost dashboard.localhost" | sudo tee -a /etc/hosts
+if ! grep -q "argocd.devops" /etc/hosts; then
+  echo "127.0.0.1 argocd.devops jenkins.localhost dashboard.localhost" | sudo tee -a /etc/hosts
   echo "✅ Hosts entries added"
 else
   echo "✅ Hosts entries already exist"
@@ -108,8 +108,8 @@ fi
 # openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 #   -keyout /tmp/argocd.key \
 #   -out /tmp/argocd.crt \
-#   -subj "/CN=argocd.localhost" \
-#   -addext "subjectAltName=DNS:argocd.localhost"
+#   -subj "/CN=argocd.devops" \
+#   -addext "subjectAltName=DNS:argocd.devops"
 
 # # Create secret
 # kubectl create secret tls argocd-tls \
@@ -121,8 +121,8 @@ fi
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout /tmp/argocd.key \
   -out /tmp/argocd.crt \
-  -subj "/CN=argocd.localhost" \
-  -addext "subjectAltName=DNS:argocd.localhost"
+  -subj "/CN=argocd.devops" \
+  -addext "subjectAltName=DNS:argocd.devops"
 
 # Create secret in argocd namespace
 kubectl create secret tls argocd-server-tls \
@@ -137,22 +137,22 @@ which mkcert || brew install mkcert
 mkcert -install
 
 # Generate certs
-mkcert argocd.localhost jenkins.localhost dashboard.localhost
+mkcert argocd.devops jenkins.localhost dashboard.localhost
 
 # Create TLS secrets
 kubectl create secret tls argocd-tls \
-  --cert=argocd.localhost+2.pem \
-  --key=argocd.localhost+2-key.pem \
+  --cert=argocd.devops+2.pem \
+  --key=argocd.devops+2-key.pem \
   -n argocd --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl create secret tls jenkins-tls \
-  --cert=argocd.localhost+2.pem \
-  --key=argocd.localhost+2-key.pem \
+  --cert=argocd.devops+2.pem \
+  --key=argocd.devops+2-key.pem \
   -n jenkins --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl create secret tls dashboard-tls \
-  --cert=argocd.localhost+2.pem \
-  --key=argocd.localhost+2-key.pem \
+  --cert=argocd.devops+2.pem \
+  --key=argocd.devops+2-key.pem \
   -n kubernetes-dashboard --dry-run=client -o yaml | kubectl apply -f -
 
 echo "✅ TLS certificates created"
@@ -206,9 +206,9 @@ cat ~/dashboard-kubeconfig.yaml
 
 echo ""
 echo "=== Setup Complete ==="
-echo "✅ ArgoCD    → https://argocd.localhost"
+echo "✅ ArgoCD    → https://argocd.devops"
 echo "✅ Jenkins   → http://jenkins.localhost"
 echo "✅ Dashboard → http://dashboard.localhost"
 echo ""
 echo "GitHub OAuth callback URL:"
-echo "https://argocd.localhost/api/dex/callback"
+echo "https://argocd.devops/api/dex/callback"
