@@ -19,7 +19,7 @@ data:
           clientId: "jenkins"
           clientSecret: "jenkins-dex-secret"
           wellKnownOpenIDConfigurationUrl: "https://argocd.localhost/api/dex/.well-known/openid-configuration"
-          userNameField: "email"
+          userNameField: "preferred_username"
           fullNameFieldName: "name"
           groupsFieldName: "groups"
           scopes: "openid email profile groups"
