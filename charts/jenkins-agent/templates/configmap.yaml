@@ -29,8 +29,10 @@ data:
             try_files $uri $uri/ /index.html;
         }
 
-       location / {
-          proxy_pass http://backend;
+       location /api/ {
+          proxy_pass http://backend/;
+
+          rewrite ^/api/(.*) /$1 break;
 
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -42,5 +44,5 @@ data:
 
           proxy_redirect off;
           proxy_buffering off;
-      }
+      }     
     }
