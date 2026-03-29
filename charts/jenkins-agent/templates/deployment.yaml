@@ -70,6 +70,9 @@ spec:
           envFrom:                          # ← add here too
             - configMapRef:
                 name: jenkins-agent-config
+            - secretRef:
+                name: jenkins-agent-secrets    # ← inject secrets as env vars
+
           resources:
             requests:
               cpu: {{ .Values.backend.resources.requests.cpu }}
