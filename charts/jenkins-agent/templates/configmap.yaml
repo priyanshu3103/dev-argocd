@@ -6,7 +6,7 @@ metadata:
 data:
   FRONTEND_URL: "http://jenkins-agent-frontend:{{ .Values.frontend.port }}"
   BACKEND_URL: "http://jenkins-agent-backend:{{ .Values.backend.port }}"
-
+  JENKINS_URL: "http://jenkins:8080"    # ← internal k8s DNS
 ---
 
 apiVersion: v1
