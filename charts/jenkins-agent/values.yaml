@@ -29,10 +29,6 @@ backend:
     limits:
       cpu: 200m
       memory: 256Mi
-  secrets:
-  agentApiKey: ""      # ← override via helm --set or external secret
-  jenkinsToken: ""      # ← override via helm --set or external secret
-  slackWebhookUrl: ""   # ← override via helm --set or external secret
 
 namespace: jenkins
 

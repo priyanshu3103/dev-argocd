@@ -204,6 +204,15 @@ EOF
 echo "✅ Kubeconfig saved to ~/dashboard-kubeconfig.yaml"
 cat ~/dashboard-kubeconfig.yaml
 
+echo "=== Creating Jenkins Agent Secrets ==="
+kubectl create secret generic jenkins-agent-secrets \
+  --from-literal=AGENT_API_KEY=${AGENT_API_KEY} \
+  --from-literal=JENKINS_TOKEN=${JENKINS_TOKEN} \
+  --from-literal=GEMINI_API_KEY=${GEMINI_API_KEY} \
+  --namespace=jenkins \
+  --dry-run=client -o yaml | kubectl apply -f -
+echo "✅ Secrets created"
+
 echo ""
 echo "=== Setup Complete ==="
 echo "✅ ArgoCD    → https://argocd.localhost"
