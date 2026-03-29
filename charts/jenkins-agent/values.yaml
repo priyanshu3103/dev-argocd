@@ -2,7 +2,7 @@ frontend:
   enabled: true
   image:
     repository: priyanshu30/jenkins-agent-frontend
-    tag: master-6596328 # frontend    # ← comment needed for sed to find correct line
+    tag: master-08fa476 # frontend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 80
   replicas: 1
@@ -18,7 +18,7 @@ backend:
   enabled: true
   image:
     repository: priyanshu30/jenkins-agent-backend
-    tag: master-6596328 # backend    # ← comment needed for sed to find correct line
+    tag: master-08fa476 # backend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 8000
   replicas: 1
