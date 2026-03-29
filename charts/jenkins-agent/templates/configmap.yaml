@@ -7,6 +7,7 @@ data:
   FRONTEND_URL: "http://jenkins-agent-frontend:{{ .Values.frontend.port }}"
   BACKEND_URL: "http://jenkins-agent-backend:{{ .Values.backend.port }}"
   JENKINS_URL: "http://jenkins:8080"    # ← internal k8s DNS
+  GEMINI_MODEL: "gemini-2.0-flash"
 ---
 
 apiVersion: v1
