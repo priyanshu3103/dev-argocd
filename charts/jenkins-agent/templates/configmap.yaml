@@ -10,6 +10,7 @@ data:
   GEMINI_MODEL: "gemini-2.0-flash"
 ---
 
+# ============ NGINX CONFIG ============
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -30,7 +31,7 @@ data:
             try_files $uri $uri/ /index.html;
         }
 
-       location /api/ {
+        location /api/ {
           proxy_pass http://backend/;
 
           rewrite ^/api/(.*) /$1 break;
@@ -45,5 +46,5 @@ data:
 
           proxy_redirect off;
           proxy_buffering off;
-      }     
+        }
     }
