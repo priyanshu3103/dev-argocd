@@ -33,5 +33,6 @@ backend:
 namespace: jenkins
 
 config:
+  jenkinsUrl: "http://jenkins:8080"    # ← internal
   frontendUrl: "http://agent.localhost"
   backendUrl: "http://jenkins-agent-backend:8000"
