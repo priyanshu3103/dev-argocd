@@ -5,6 +5,7 @@ frontend:
     tag: master-8a17a20 # frontend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 80
+  revisionHistoryLimit: 5
   replicas: 1
   resources:
     requests:
@@ -21,6 +22,7 @@ backend:
     tag: master-8a17a20 # backend    # ← comment needed for sed to find correct line
     pullPolicy: Always
   port: 8000
+  revisionHistoryLimit: 5
   replicas: 1
   resources:
     requests:
